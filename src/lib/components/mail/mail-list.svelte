@@ -2,13 +2,24 @@
   import { cn } from "$lib/utils.js";
   import { Badge } from "$lib/components/ui/badge/index.js";
   import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
-  import type { Mail } from "./data.js";
+  import type { Mail, Account } from "./data.js";
   import { formatDistanceToNow } from "date-fns";
 
-  let { items, selectedMailId = $bindable() } = $props<{
+  let { items, selectedMailId = $bindable(), accounts, showAccountBadge = false } = $props<{
     items: Mail[];
     selectedMailId: string | null;
+    accounts: Account[];
+    showAccountBadge?: boolean;
   }>();
+
+  // Create a lookup map for better performance
+  const accountMap = $derived(
+    new Map<string, Account>(accounts.map((a: Account) => [a.id, a]))
+  );
+
+  function getAccount(accountId: string): Account | undefined {
+    return accountMap.get(accountId);
+  }
 </script>
 
 <ScrollArea class="h-screen">
@@ -45,8 +56,17 @@
         <div class="line-clamp-2 text-xs text-muted-foreground">
           {item.text.substring(0, 300)}
         </div>
-        {#if item.labels.length}
+        {#if item.labels.length || showAccountBadge}
           <div class="flex items-center gap-2">
+            {#if showAccountBadge}
+              {@const account = getAccount(item.accountId)}
+              {#if account}
+                <Badge variant="secondary" class="gap-1">
+                  <div class={cn("h-1.5 w-1.5 rounded-full", account.color)}></div>
+                  {account.name}
+                </Badge>
+              {/if}
+            {/if}
             {#each item.labels as label}
               <Badge variant={label === "work" ? "default" : "outline"}>
                 {label}

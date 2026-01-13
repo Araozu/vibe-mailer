@@ -2,10 +2,16 @@
   import { Avatar, AvatarFallback, AvatarImage } from "$lib/components/ui/avatar/index.js";
   import { Button } from "$lib/components/ui/button/index.js";
   import { Separator } from "$lib/components/ui/separator/index.js";
-  import type { Mail } from "./data.js";
+  import { Badge } from "$lib/components/ui/badge/index.js";
+  import type { Mail, Account } from "./data.js";
   import { Archive, ArchiveRestore, MoreVertical, Reply, ReplyAll, Forward, Trash2 } from "@lucide/svelte";
+  import { cn } from "$lib/utils.js";
 
-  let { mail } = $props<{ mail: Mail | null }>();
+  let { mail, accounts } = $props<{ mail: Mail | null; accounts: Account[] }>();
+
+  const recipientAccount = $derived(
+    mail ? accounts.find((a: Account) => a.id === mail.accountId) : null
+  );
 </script>
 
 <div class="flex h-full flex-col">
@@ -56,6 +62,15 @@
             <div class="line-clamp-1 text-xs">
               <span class="font-medium">Reply-To:</span> {mail.email}
             </div>
+            {#if recipientAccount}
+              <div class="flex items-center gap-1 text-xs">
+                <span class="font-medium">To:</span>
+                <Badge variant="secondary" class="gap-1">
+                  <div class={cn("h-1.5 w-1.5 rounded-full", recipientAccount.color)}></div>
+                  {recipientAccount.email}
+                </Badge>
+              </div>
+            {/if}
           </div>
         </div>
         {#if mail.date}

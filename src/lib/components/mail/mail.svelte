@@ -8,21 +8,39 @@
   import MailList from "./mail-list.svelte";
   import MailDisplay from "./mail-display.svelte";
   import Nav from "./nav.svelte";
-  import { mails } from "./data.js";
+  import AccountSwitcher from "./account-switcher.svelte";
+  import { mails, accounts } from "./data.js";
 
   let isCollapsed = $state(false);
   let selectedMailId = $state(mails[0].id);
   let search = $state("");
+  let selectedAccountId = $state<string | null>(null);
 
   const selectedMail = $derived(
     mails.find((item) => item.id === selectedMailId) || null
   );
 
+  const accountFilteredMails = $derived(
+    selectedAccountId
+      ? mails.filter((item) => item.accountId === selectedAccountId)
+      : mails
+  );
+
   const filteredMails = $derived(
-    mails.filter((item) =>
+    accountFilteredMails.filter((item) =>
       item.subject.toLowerCase().includes(search.toLowerCase()) ||
       item.name.toLowerCase().includes(search.toLowerCase())
     )
+  );
+
+  const currentAccountName = $derived(
+    selectedAccountId
+      ? accounts.find((a) => a.id === selectedAccountId)?.name || "Inbox"
+      : "All Accounts"
+  );
+
+  const unreadCount = $derived(
+    accountFilteredMails.filter((item) => !item.read).length
   );
 </script>
 
@@ -46,10 +64,12 @@
         {/if}
       </div>
       <Separator />
+      <AccountSwitcher {accounts} bind:selectedAccountId {isCollapsed} />
+      <Separator />
       <Nav
         {isCollapsed}
         links={[
-          { title: "Inbox", label: "128", icon: Inbox, variant: "default" },
+          { title: "Inbox", label: String(accountFilteredMails.length), icon: Inbox, variant: "default" },
           { title: "Drafts", label: "9", icon: File, variant: "ghost" },
           { title: "Sent", label: "", icon: Send, variant: "ghost" },
           { title: "Junk", label: "23", icon: Archive, variant: "ghost" },
@@ -73,10 +93,14 @@
     <ResizablePane defaultSize={35} minSize={30}>
       <Tabs value="all">
         <div class="flex items-center px-4 py-2">
-          <h1 class="text-xl font-bold">Inbox</h1>
+          <h1 class="text-xl font-bold">{currentAccountName}</h1>
           <TabsList class="ml-auto">
-            <TabsTrigger value="all" class="text-zinc-600 dark:text-zinc-200">All mail</TabsTrigger>
-            <TabsTrigger value="unread" class="text-zinc-600 dark:text-zinc-200">Unread</TabsTrigger>
+            <TabsTrigger value="all" class="text-zinc-600 dark:text-zinc-200">
+              All mail ({accountFilteredMails.length})
+            </TabsTrigger>
+            <TabsTrigger value="unread" class="text-zinc-600 dark:text-zinc-200">
+              Unread ({unreadCount})
+            </TabsTrigger>
           </TabsList>
         </div>
         <Separator />
@@ -89,19 +113,21 @@
           </form>
         </div>
         <TabsContent value="all" class="m-0">
-          <MailList items={filteredMails} bind:selectedMailId />
+          <MailList items={filteredMails} bind:selectedMailId {accounts} showAccountBadge={!selectedAccountId} />
         </TabsContent>
         <TabsContent value="unread" class="m-0">
           <MailList
             items={filteredMails.filter((mail) => !mail.read)}
             bind:selectedMailId
+            {accounts}
+            showAccountBadge={!selectedAccountId}
           />
         </TabsContent>
       </Tabs>
     </ResizablePane>
     <ResizableHandle withHandle />
     <ResizablePane defaultSize={45}>
-        <MailDisplay mail={selectedMail} />
+        <MailDisplay mail={selectedMail} {accounts} />
     </ResizablePane>
   </ResizablePaneGroup>
 </div>

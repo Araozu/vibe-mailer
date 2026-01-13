@@ -1,3 +1,10 @@
+export type Account = {
+  id: string;
+  name: string;
+  email: string;
+  color: string;
+};
+
 export type Mail = {
   id: string;
   name: string;
@@ -7,7 +14,29 @@ export type Mail = {
   date: string;
   read: boolean;
   labels: string[];
+  accountId: string;
 };
+
+export const accounts: Account[] = [
+  {
+    id: "work",
+    name: "Work",
+    email: "john.doe@company.com",
+    color: "bg-blue-500",
+  },
+  {
+    id: "personal",
+    name: "Personal",
+    email: "john.doe@personal.com",
+    color: "bg-green-500",
+  },
+  {
+    id: "freelance",
+    name: "Freelance",
+    email: "john@freelance.dev",
+    color: "bg-purple-500",
+  },
+];
 
 export const mails: Mail[] = [
   {
@@ -19,6 +48,7 @@ export const mails: Mail[] = [
     date: "2023-10-22T09:00:00",
     read: true,
     labels: ["meeting", "work"],
+    accountId: "work",
   },
   {
     id: "2",
@@ -29,6 +59,7 @@ export const mails: Mail[] = [
     date: "2023-10-22T10:30:00",
     read: false,
     labels: ["work"],
+    accountId: "work",
   },
   {
     id: "3",
@@ -39,6 +70,7 @@ export const mails: Mail[] = [
     date: "2023-10-21T15:45:00",
     read: true,
     labels: ["personal"],
+    accountId: "personal",
   },
   {
     id: "4",
@@ -49,6 +81,7 @@ export const mails: Mail[] = [
     date: "2023-10-20T11:15:00",
     read: false,
     labels: ["work", "important"],
+    accountId: "work",
   },
   {
     id: "5",
@@ -59,6 +92,7 @@ export const mails: Mail[] = [
     date: "2023-10-19T18:20:00",
     read: true,
     labels: ["personal"],
+    accountId: "personal",
   },
   {
     id: "6",
@@ -69,6 +103,7 @@ export const mails: Mail[] = [
     date: "2023-10-18T14:10:00",
     read: true,
     labels: ["personal"],
+    accountId: "personal",
   },
   {
     id: "7",
@@ -79,6 +114,7 @@ export const mails: Mail[] = [
     date: "2023-10-17T10:00:00",
     read: false,
     labels: ["work"],
+    accountId: "freelance",
   },
   {
     id: "8",
@@ -89,5 +125,6 @@ export const mails: Mail[] = [
     date: "2023-10-16T16:30:00",
     read: true,
     labels: ["work"],
+    accountId: "freelance",
   },
 ];

@@ -113,7 +113,7 @@ export const mails: Mail[] = [
     text: "I saw a job opening that you might be interested in. Let me know if you want more details.",
     date: "2023-10-17T10:00:00",
     read: false,
-    labels: ["work"],
+    labels: ["freelance"],
     accountId: "freelance",
   },
   {
@@ -124,7 +124,7 @@ export const mails: Mail[] = [
     text: "Please provide your feedback on the latest draft of the proposal. Your input is valuable.",
     date: "2023-10-16T16:30:00",
     read: true,
-    labels: ["work"],
+    labels: ["freelance"],
     accountId: "freelance",
   },
 ];

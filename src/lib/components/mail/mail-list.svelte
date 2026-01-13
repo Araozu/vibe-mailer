@@ -12,8 +12,13 @@
     showAccountBadge?: boolean;
   }>();
 
+  // Create a lookup map for better performance
+  const accountMap = $derived(
+    new Map<string, Account>(accounts.map((a: Account) => [a.id, a]))
+  );
+
   function getAccount(accountId: string): Account | undefined {
-    return accounts.find((a: Account) => a.id === accountId);
+    return accountMap.get(accountId);
   }
 </script>
 

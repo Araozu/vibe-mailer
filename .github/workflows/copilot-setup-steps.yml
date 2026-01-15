@@ -30,10 +30,13 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: 24
-        cache: 'pnpm'
+
+    - name: Install pnpm
+      run: npm install -g pnpm
+
+    - name: Install with pnpm
+      run: pnpm install --no-frozen-lockfile
 
     - name: Build
       run: cd src-tauri && cargo build
 
-    - name: Install dependencies
-      run: pnpm install --no-frozen-lockfile

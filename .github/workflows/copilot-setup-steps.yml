@@ -21,6 +21,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v5
 
+    - name: Build
+      run: cargo build
+
     - name: Setup Node
       uses: actions/setup-node@v4
       with:

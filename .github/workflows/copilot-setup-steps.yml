@@ -21,14 +21,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v5
 
-    - name: Build
-      run: cargo build
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libglib2.0-dev libgtk-3-dev
 
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
         node-version: 24
         cache: 'pnpm'
+
+    - name: Build
+      run: cd src-tauri && cargo build
 
     - name: Install dependencies
       run: pnpm install --no-frozen-lockfile

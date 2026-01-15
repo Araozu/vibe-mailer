@@ -28,10 +28,10 @@ pnpm run check
 pnpm run check:watch
 
 # Run Tauri development
-pnpm run tauri dev
+pnpm tauri dev
 
 # Build Tauri app
-pnpm run tauri build
+pnpm tauri build
 ```
 
 ## Project Structure
